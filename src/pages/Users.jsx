@@ -13,8 +13,10 @@ import {
 } from "../redux/slices/api/useApiSlice";
 import { toast } from "sonner";
 import Loading from "../components/Loader";
+import { useSelector } from "react-redux";
 
 const Users = () => {
+  const { user } = useSelector((state) => state.auth);
   const [openDialog, setOpenDialog] = useState(false);
   const [open, setOpen] = useState(false);
   const [openAction, setOpenAction] = useState(false);
@@ -32,7 +34,7 @@ const Users = () => {
     if (data) {
       setUsers(data); // Update local state when new data arrives
     }
-    console.log(data)
+    console.log(data);
   }, [data]);
 
   //sq brace
@@ -60,6 +62,7 @@ const Users = () => {
 
   console.log(data, "team List here");
   // const userActionHandler = () => {};
+  error && toast.error(error?.data?.message || error?.message);
   const deleteHandler = async () => {
     try {
       const result = await deleteUser(selected);
@@ -155,12 +158,14 @@ const Users = () => {
       <div className="w-full md:px-1 px-0 mb-6">
         <div className="flex items-center justify-between mb-8">
           <Title title="  Team Members" />
-          <Button
-            label="Add New User"
-            icon={<IoMdAdd className="text-lg" />}
-            className="flex flex-row-reverse gap-1 items-center bg-blue-600 text-white rounded-md 2xl:py-2.5"
-            onClick={() => setOpen(true)}
-          />
+          {user?.isAdmin && (
+            <Button
+              label="Add New User"
+              icon={<IoMdAdd className="text-lg" />}
+              className="flex flex-row-reverse gap-1 items-center bg-blue-600 text-white rounded-md 2xl:py-2.5"
+              onClick={() => setOpen(true)}
+            />
+          )}
         </div>
 
         <div className="bg-white px-2 md:px-4 py-4 shadow-md rounded">

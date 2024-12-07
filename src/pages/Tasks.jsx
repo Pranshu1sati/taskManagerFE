@@ -58,29 +58,9 @@ const Tasks = () => {
     setSearchQuery(e.target.value);
   };
 
-  const filteredTasks = data?.tasks.filter((task) => {
-    // Get the user information from local storage
-    const user = JSON.parse(localStorage.getItem("user")); // Assuming user data is stored in localStorage
-
-    // Check if the user is an admin
-    const isAdmin = user?.isAdmin; // Assuming user has an isAdmin field
-
-    // Check if the task title matches the search query
-    const matchesSearch = task?.title
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
-
-    if (isAdmin) {
-      // If user is admin, allow all tasks that match the search query
-      return matchesSearch;
-    } else {
-      // If user is not admin, check if the user's ID is in the task's team array
-      const userId = user?._id; // Assuming user ID is available
-      const taskHasUser = task?.team?.includes(userId);
-
-      return matchesSearch && taskHasUser;
-    }
-  });
+  const filteredTasks = data?.tasks.filter((task) =>
+    task?.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return isLoading ? (
     <div className="py-10">
